@@ -231,7 +231,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      appBar: AppBar(
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(
+              color:
+                  Theme.of(context).colorScheme.onPrimary), // ใช้สี onPrimary
+        ),
+      ),
       body: SingleChildScrollView(
         //ป้องกันเลย์เอาต์ล้นหน้าจอ
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

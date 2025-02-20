@@ -127,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         style: TextStyle(
                           fontSize: 30.0, // ขนาดตัวอักษร
                           fontWeight: FontWeight.w900, // น้ำหนักตัวอักษร
-                          color: lightColorScheme.primary, // สีข้อความ
+                          color: primaryColor, // สีข้อความ
                         ),
                       ),
                       const SizedBox(height: 40.0), // เว้นระยะห่าง
@@ -201,8 +201,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 agreePersonalData = value!; // อัปเดตสถานะ
                               });
                             },
-                            activeColor: lightColorScheme
-                                .primary, // สีของ Checkbox เมื่อถูกเลือก
+                            activeColor:
+                                primaryColor, // สีของ Checkbox เมื่อถูกเลือก
                           ),
                           const Text(
                             'I agree to the processing of ', // ข้อความ
@@ -212,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             'Personal data', // ข้อความเน้น
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: lightColorScheme.primary,
+                              color: primaryColor,
                             ),
                           ),
                         ],
@@ -295,7 +295,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               'Sign In',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
+                                color: primaryColor,
                               ),
                             ),
                           ),

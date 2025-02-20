@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: lightMode,
+      theme: appTheme,
       // home: const TabMenuScreen(),
       home: const WelcomeScreen(),
     );

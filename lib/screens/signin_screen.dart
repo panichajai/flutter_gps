@@ -90,7 +90,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.w900,
-                          color: lightColorScheme.primary,
+                          color: primaryColor,
                         ),
                       ),
                       const SizedBox(height: 40),
@@ -181,7 +181,7 @@ class _SignInScreenState extends State<SignInScreen> {
             onPressed: () {},
             child: Text(
               'Forgot password?',
-              style: TextStyle(color: lightColorScheme.primary),
+              style: TextStyle(color: primaryColor),
             ),
           ),
         ],
@@ -233,9 +233,8 @@ class _SignInScreenState extends State<SignInScreen> {
           onPressed: () => Navigator.push(context,
               MaterialPageRoute(builder: (context) => const SignUpScreen())),
           child: Text('Sign up',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: lightColorScheme.primary)),
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: primaryColor)),
         ),
       ],
     );

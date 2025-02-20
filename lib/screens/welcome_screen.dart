@@ -78,8 +78,8 @@ class WelcomeScreen extends StatelessWidget {
                       onTap:
                           const SignUpScreen(), // เมื่อกดปุ่ม ให้เปิดหน้าจอ SignUpScreen
                       color: Colors.white, // สีพื้นหลังของปุ่ม (สีขาว)
-                      textColor: lightColorScheme
-                          .primary, // สีข้อความในปุ่ม (สี primary จากธีม)
+                      textColor:
+                          primaryColor, // สีข้อความในปุ่ม (สี primary จากธีม)
                     ),
                   ),
                 ],

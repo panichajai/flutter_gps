@@ -105,121 +105,6 @@ class _TabMenuScreenState extends State<TabMenuScreen> {
     }
   }
 
-  // void _openEditDialog() {
-  //   final TextEditingController fnameController =
-  //       TextEditingController(text: _profileData?['fname']); // ชื่อผู้ใช้
-  //   final TextEditingController lnameController =
-  //       TextEditingController(text: _profileData?['lname']); // นามสกุล
-  //   final TextEditingController currentPasswordController =
-  //       TextEditingController(); // รหัสผ่านเดิม
-  //   final TextEditingController newPasswordController =
-  //       TextEditingController(); // รหัสผ่านใหม่
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Edit Profile'),
-  //         content: SingleChildScrollView(
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               TextField(
-  //                 controller: fnameController,
-  //                 decoration: const InputDecoration(labelText: 'First Name'),
-  //               ),
-  //               TextField(
-  //                 controller: lnameController,
-  //                 decoration: const InputDecoration(labelText: 'Last Name'),
-  //               ),
-  //               TextField(
-  //                 controller: currentPasswordController,
-  //                 decoration:
-  //                     const InputDecoration(labelText: 'Current Password'),
-  //                 obscureText: true,
-  //               ),
-  //               TextField(
-  //                 controller: newPasswordController,
-  //                 decoration: const InputDecoration(labelText: 'New Password'),
-  //                 obscureText: true,
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () => Navigator.of(context).pop(),
-  //             child: const Text('Cancel'),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () {
-  //               _updateProfile(
-  //                 fnameController.text,
-  //                 lnameController.text,
-  //                 currentPasswordController.text,
-  //                 newPasswordController.text,
-  //               ); // ส่งข้อมูลที่แก้ไขไป API
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: const Text('Save'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Future<void> _deleteAccount() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final userId =
-  //       prefs.getString('user_id'); // ดึง userId จาก SharedPreferences
-
-  //   if (userId == null) {
-  //     print('No userId found in SharedPreferences.');
-  //     return;
-  //   }
-
-  //   final url = Uri.parse(
-  //       'https://localhost:44327/api/Customers/$userId'); // ใช้ userId ใน URL
-  //   final headers = {'accept': '*/*'}; // หัวข้อคำขอ
-
-  //   final confirmDelete = await showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Confirm Delete'),
-  //         content: const Text('Are you sure to delete your account?'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () => Navigator.of(context).pop(false), // ไม่ลบ
-  //             child: const Text('Cancel'),
-  //           ),
-  //           ElevatedButton(
-  //             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-  //             onPressed: () => Navigator.of(context).pop(true), // ยืนยันการลบ
-  //             child: const Text('Delete'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-
-  //   if (confirmDelete == true) {
-  //     final response = await http.delete(url, headers: headers);
-
-  //     if (response.statusCode == 200) {
-  //       print('Account deleted successfully.');
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(
-  //             builder: (context) => const SignInScreen()), // ไปที่หน้าล็อกอิน
-  //       );
-  //     } else {
-  //       print('Failed to delete account. Status code: ${response.statusCode}');
-  //     }
-  //   }
-  // }
-
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -236,175 +121,118 @@ class _TabMenuScreenState extends State<TabMenuScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3, // จำนวนแท็บทั้งหมด
+      length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('My App'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Home', icon: Icon(Icons.home)),
-              Tab(text: 'Contact', icon: Icon(Icons.contact_mail)),
-              Tab(text: 'Profile', icon: Icon(Icons.person)),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            const Center(child: Text('Home')), // เนื้อหาแท็บ Home
-            const Center(child: Text('Contact')), // เนื้อหาแท็บ Contact
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: kSpacingUnit.w * 10,
-                    width: kSpacingUnit.w * 10,
-                    margin: EdgeInsets.only(top: kSpacingUnit.w * 3),
-                    child: Stack(
-                      children: <Widget>[
-                        CircleAvatar(
-                          radius: kSpacingUnit.w * 5,
-                          backgroundImage:
-                              AssetImage('assets/images/avatar.png'),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: GestureDetector(
-                            // ✅ เพิ่ม GestureDetector
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfileScreen()),
-                              );
-                            },
-                            child: Container(
-                              height: kSpacingUnit.w * 2.5,
-                              width: kSpacingUnit.w * 2.5,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary, // สีกรอบ
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  LineAwesomeIcons.pen_solid,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimary, // ใช้สีขาวจากธีม
-                                  size: 15.w,
+        body: SafeArea(
+          child: Column(
+            children: [
+              PreferredSize(
+                preferredSize:
+                    const Size.fromHeight(50), // ✅ กำหนดความสูงของ TabBar
+                child: TabBar(
+                  indicatorColor: Theme.of(context)
+                      .colorScheme
+                      .primary, // ✅ เส้นใต้แท็บที่เลือก
+                  labelColor: Theme.of(context)
+                      .colorScheme
+                      .primary, // ✅ สีข้อความที่เลือก
+                  unselectedLabelColor:
+                      Colors.grey, // ✅ สีข้อความที่ไม่ได้เลือก
+                  tabs: const [
+                    Tab(text: 'Home', icon: Icon(Icons.home)),
+                    Tab(text: 'Contact', icon: Icon(Icons.contact_mail)),
+                    Tab(text: 'Profile', icon: Icon(Icons.person)),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    const Center(child: Text('Home')), // ✅ แท็บ Home
+                    const Center(child: Text('Contact')), // ✅ แท็บ Contact
+
+                    // ✅ แท็บ Profile (ใช้โค้ดเดิมที่ให้มา)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: kSpacingUnit.w * 10,
+                            width: kSpacingUnit.w * 10,
+                            margin: EdgeInsets.only(top: kSpacingUnit.w * 3),
+                            child: Stack(
+                              children: <Widget>[
+                                CircleAvatar(
+                                  radius: kSpacingUnit.w * 5,
+                                  backgroundImage:
+                                      AssetImage('assets/images/avatar.png'),
                                 ),
-                              ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditProfileScreen()),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: kSpacingUnit.w * 2.5,
+                                      width: kSpacingUnit.w * 2.5,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          LineAwesomeIcons.pen_solid,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          size: 15.w,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: kSpacingUnit.w * 2),
-                  Text(
-                    '${_profileData?['fullname'] ?? 'N/A'}',
-                    style: kTitleTextStyle,
-                  ),
-                  SizedBox(height: kSpacingUnit.w * 0.5),
-                  Text(
-                    '${_profileData?['email'] ?? 'N/A'}',
-                    style: kCaptionTextStyle,
-                  ),
-                  SizedBox(height: kSpacingUnit.w * 2),
-                  ElevatedButton(
-                    onPressed: _logout,
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        color: Theme.of(context).colorScheme.primary, // สีกรอบ
+                          SizedBox(height: kSpacingUnit.w * 2),
+                          Text(
+                            '${_profileData?['fullname'] ?? 'N/A'}',
+                            style: kTitleTextStyle,
+                          ),
+                          SizedBox(height: kSpacingUnit.w * 0.5),
+                          Text(
+                            '${_profileData?['email'] ?? 'N/A'}',
+                            style: kCaptionTextStyle,
+                          ),
+                          SizedBox(height: kSpacingUnit.w * 2),
+                          ElevatedButton(
+                            onPressed: _logout,
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                            ),
+                            child: const Text('Logout'),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8), // ขนาดปุ่ม
-                    ), // ฟังก์ชัน Logout
-                    child: const Text('Logout'),
-                  ),
-                  const SizedBox(height: 16),
-                  ////////////////_openEditDialog///////////////////////
-                  // const SizedBox(height: 16),
-                  // _profileData == null
-                  //     ? const CircularProgressIndicator() // กำลังโหลด
-                  //     : Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Text(
-                  //             '${_profileData?['fullname'] ?? 'N/A'}',
-                  //             style: const TextStyle(fontSize: 16),
-                  //           ),
-                  //           IconButton(
-                  //             icon: const Icon(Icons.edit),
-                  //             onPressed: _openEditDialog, // เปิด Dialog แก้ไข
-                  //           ),
-                  //         ],
-                  //       ),
-                ],
+                    ),
+                  ],
+                ),
               ),
-
-              // child: Column(
-              //   children: [
-              //     const Text('Profile Info',
-              //         style: TextStyle(fontWeight: FontWeight.bold)),
-              //     const SizedBox(height: 16),
-              //     _profileData == null
-              //         ? const CircularProgressIndicator() // กำลังโหลด
-              //         : Row(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               Text(
-              //                 '${_profileData?['fullname'] ?? 'N/A'}',
-              //                 style: const TextStyle(fontSize: 16),
-              //               ),
-              //               IconButton(
-              //                 icon: const Icon(Icons.edit),
-              //                 onPressed: _openEditDialog, // เปิด Dialog แก้ไข
-              //               ),
-              //             ],
-              //           ),
-              //     const SizedBox(height: 16),
-              //     Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         // ปุ่มลบบัญชี
-              //         OutlinedButton(
-              //           onPressed: _deleteAccount, // ฟังก์ชันลบบัญชี
-              //           style: OutlinedButton.styleFrom(
-              //             side: BorderSide(
-              //               color:
-              //                   Theme.of(context).colorScheme.primary, // สีกรอบ
-              //             ),
-              //             foregroundColor: Theme.of(context)
-              //                 .colorScheme
-              //                 .primary, // สีข้อความเหมือนสีพื้นหลังปุ่ม Logout
-              //             padding: const EdgeInsets.symmetric(
-              //                 horizontal: 16, vertical: 8), // ขนาดปุ่ม
-              //           ),
-              //           child: const Text('Delete Account'),
-              //         ),
-              //         const SizedBox(width: 16), // ระยะห่างระหว่างปุ่ม
-              //         // ปุ่มออกจากระบบ
-              //         ElevatedButton(
-              //           onPressed: _logout,
-              //           style: OutlinedButton.styleFrom(
-              //             side: BorderSide(
-              //               color:
-              //                   Theme.of(context).colorScheme.primary, // สีกรอบ
-              //             ),
-              //             padding: const EdgeInsets.symmetric(
-              //                 horizontal: 16, vertical: 8), // ขนาดปุ่ม
-              //           ), // ฟังก์ชัน Logout
-              //           child: const Text('Logout'),
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
