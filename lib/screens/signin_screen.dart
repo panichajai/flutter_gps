@@ -1,258 +1,120 @@
-import 'package:flutter/material.dart'; // ใช้สำหรับการสร้าง UI ของ Flutter
-import 'package:icons_plus/icons_plus.dart'; // ใช้สำหรับการใช้งานไอคอนต่างๆ เช่น Facebook, Twitter
-import 'dart:convert'; // สำหรับการเข้ารหัสและถอดรหัส JSON
+import 'package:flutter/material.dart';
+import 'package:flutter_gps/widgets/custom_button.dart';
+import 'package:flutter_gps/widgets/custom_textfield.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http; // สำหรับการเรียก API ผ่าน HTTP
-import 'package:flutter_gps/screens/signup_screen.dart'; // import ไฟล์หน้าสมัครสมาชิก
-import 'package:flutter_gps/widgets/custom_scaffold.dart'; // import custom widget สำหรับ scaffold (โครงสร้างหน้าหลัก)
-import 'package:flutter_gps/screens/tab_menu_page.dart';
-import '../theme/theme.dart'; // import ธีมสีของแอปพลิเคชัน
+import 'package:http/http.dart' as http;
+import 'package:flutter_gps/screens/signup_screen.dart';
+import 'package:flutter_gps/widgets/custom_scaffold.dart';
+import 'package:flutter_gps/screens/tab_menu_screen.dart';
+import '../theme/theme.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-// Widget ที่เป็นหน้าหลักของการเข้าสู่ระบบ
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key}); // กำหนด constructor แบบ immutable
+  const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() =>
-      _SignInScreenState(); // เชื่อม Widget กับ State
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final _formSignInKey = GlobalKey<FormState>(); // ใช้สำหรับเก็บสถานะของฟอร์ม
-  final _emailController =
-      TextEditingController(); // ตัวควบคุมข้อความในช่องกรอก email
-  final _passwordController =
-      TextEditingController(); // ตัวควบคุมข้อความในช่องกรอก password
+  final _formSignInKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+  bool rememberPassword = true;
 
-  // ฟังก์ชันสำหรับเข้าสู่ระบบ (เรียก API)
   Future<void> _login() async {
     final url = Uri.parse('https://localhost:44327/api/Customers/login');
-    final header = {'Content-Type': 'application/json'};
+    final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode(
         {'email': _emailController.text, 'password': _passwordController.text});
 
-    final response = await http.post(url, headers: header, body: body);
-    if (response.statusCode == 200) {
+    try {
+      final response = await http.post(url, headers: headers, body: body);
       final jsonResponse = jsonDecode(response.body);
-      _showSnackBar(jsonResponse['message']);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const TabMenuPage()),
-      );
-      // บันทึก email ใน SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_email', _emailController.text);
-      print('Saved email: ${prefs.getString('user_email')}');
 
-      // ใช้ await ใน Navigator
-      await Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const TabMenuPage()),
-      );
-    } else if (response.statusCode == 401) {
-      final jsonResponse = jsonDecode(response.body);
-      _showSnackBar(jsonResponse['message']);
+      if (response.statusCode == 200) {
+        _showSnackBar(jsonResponse['message']);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_email', _emailController.text);
+
+        if (mounted) {
+          await Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const TabMenuScreen()),
+          );
+        }
+      } else {
+        _showSnackBar(jsonResponse['message'] ?? 'Login failed');
+      }
+    } catch (error) {
+      _showSnackBar('An error occurred. Please try again later.');
     }
   }
 
-  // ฟังก์ชันสำหรับแสดง SnackBar
   void _showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message), // ข้อความที่จะถูกแสดงใน SnackBar
-      duration: const Duration(seconds: 2), // ระยะเวลาแสดง SnackBar
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar); // แสดง SnackBar
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
+      );
+    }
   }
-
-  bool rememberPassword = true; // ตัวแปรสำหรับ checkbox "Remember me"
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      // ใช้ CustomScaffold เป็นโครงสร้างหลักของหน้า
       child: Column(
         children: [
-          const Expanded(
-            flex: 1,
-            child: SizedBox(height: 10), // ช่องว่างด้านบน
-          ),
+          const Spacer(),
           Expanded(
             flex: 7,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(
-                  25.0, 50.0, 25.0, 20.0), // ระยะห่างรอบๆ Container
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
               decoration: const BoxDecoration(
-                color: Colors.white, // สีพื้นหลังของ Container
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40.0), // มุมโค้งด้านบนซ้าย
-                  topRight: Radius.circular(40.0), // มุมโค้งด้านบนขวา
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
               ),
               child: SingleChildScrollView(
-                // ใช้สำหรับเลื่อนหน้าจอในกรณีที่เนื้อหายาวเกิน
                 child: Form(
-                  key: _formSignInKey, // เชื่อมฟอร์มกับ GlobalKey
+                  key: _formSignInKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Welcome back',
                         style: TextStyle(
-                          fontSize: 30.0, // ขนาดตัวอักษร
-                          fontWeight: FontWeight.w900, // น้ำหนักตัวอักษร
-                          color: lightColorScheme.primary, // สีตัวอักษร
+                          fontSize: 30,
+                          fontWeight: FontWeight.w900,
+                          color: lightColorScheme.primary,
                         ),
                       ),
-                      const SizedBox(height: 40.0), // เว้นระยะห่าง
-                      TextFormField(
-                        controller: _emailController, // ควบคุมช่องกรอก email
-                        decoration: const InputDecoration(
-                            labelText: 'Email'), // ป้ายกำกับ "Username"
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your name'; // ตรวจสอบหากช่องว่าง
-                          }
-                          return null;
-                        },
+                      const SizedBox(height: 40),
+                      CustomTextField(
+                          controller: _emailController, hintText: 'Email'),
+                      const SizedBox(height: 8),
+                      CustomTextField(
+                        controller: _passwordController,
+                        hintText: 'Password',
+                        obscureText: _obscurePassword,
+                        toggleObscure: () => setState(
+                            () => _obscurePassword = !_obscurePassword),
                       ),
-                      const SizedBox(height: 25.0), // เว้นระยะห่าง
-                      TextFormField(
-                        controller:
-                            _passwordController, // ควบคุมช่องกรอก password
-                        obscureText: true, // ซ่อนรหัสผ่าน
-                        decoration: const InputDecoration(
-                            labelText: 'Password'), // ป้ายกำกับ "Password"
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your password'; // ตรวจสอบหากช่องว่าง
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 24), // เว้นระยะห่าง
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: rememberPassword, // เช็คสถานะ checkbox
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!; // อัปเดตสถานะ
-                                  });
-                                },
-                                activeColor: lightColorScheme
-                                    .primary, // สีของ checkbox เมื่อถูกเลือก
-                              ),
-                              const Text(
-                                'Remember me', // ข้อความข้าง checkbox
-                                style: TextStyle(color: Colors.black45),
-                              ),
-                            ],
-                          ),
-                          GestureDetector(
-                            // สำหรับคลิกข้อความ
-                            child: Text(
-                              'Forget password?', // ข้อความลิงก์
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 25.0), // เว้นระยะห่าง
-                      SizedBox(
-                        width: double.infinity, // ปุ่มกว้างเต็มหน้าจอ
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              // หากฟอร์มถูกต้อง และ checkbox ถูกเลือก
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content:
-                                        Text('Processing Data')), // แสดงข้อความ
-                              );
-                              _login(); // เรียกฟังก์ชันเข้าสู่ระบบ
-                            } else if (!rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        'Please agree to the processing of personal data')), // ข้อความกรณีไม่กด remember
-                              );
-                            }
-                          },
-                          child: const Text('Sign up'), // ข้อความในปุ่ม
-                        ),
-                      ),
-                      const SizedBox(height: 25.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7, // ความหนา
-                              color: Colors.grey.withOpacity(0.5), // สีจางๆ
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text(
-                              'Sign up with',
-                              style: TextStyle(color: Colors.black45),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 25.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Logo(Logos.facebook_f), // ไอคอน Facebook
-                          Logo(Logos.twitter), // ไอคอน Twitter
-                          Logo(Logos.google), // ไอคอน Google
-                          Logo(Logos.apple), // ไอคอน Apple
-                        ],
-                      ),
-                      const SizedBox(height: 25.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Don\'t have an account? ',
-                            style: TextStyle(color: Colors.black45),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // เมื่อคลิก "Sign up"
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (e) =>
-                                      const SignUpScreen(), // ไปหน้าสมัครสมาชิก
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'Sign up',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20.0),
+                      const SizedBox(height: 24),
+                      _buildRememberMeAndForgotPassword(),
+                      const SizedBox(height: 25),
+                      _buildSignInButton(context),
+                      const SizedBox(height: 25),
+                      _buildDivider(),
+                      const SizedBox(height: 25),
+                      _buildSocialLoginButtons(),
+                      const SizedBox(height: 25),
+                      _buildSignUpOption(),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -261,6 +123,121 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // Widget _buildRememberMeAndForgotPassword() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       Row(
+  //         children: [
+  //           Checkbox(
+  //             value: rememberPassword,
+  //             onChanged: (value) {
+  //               setState(() {
+  //                 rememberPassword = value!;
+  //               });
+  //             },
+  //           ),
+  //           const Text('Remember me'),
+  //         ],
+  //       ),
+  //       TextButton(
+  //         onPressed: () {},
+  //         child: Text('Forgot password?',
+  //             style: TextStyle(color: lightColorScheme.primary)),
+  //       ),
+  //     ],
+  //   );
+  // }
+  Widget _buildRememberMeAndForgotPassword() {
+    return Padding(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 4), // ✅ ปรับให้ตรงกับฟิลด์
+      child: Row(
+        children: [
+          Expanded(
+            // ✅ ทำให้ Checkbox + Text เต็มพื้นที่
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 24, width: 24, // ✅ กำหนดขนาด Checkbox
+                  child: Checkbox(
+                    value: rememberPassword,
+                    onChanged: (value) {
+                      setState(() {
+                        rememberPassword = value!;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8), // ✅ เพิ่มระยะห่างให้เหมือน TextField
+                const Text('Remember me'),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: Text(
+              'Forgot password?',
+              style: TextStyle(color: lightColorScheme.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignInButton(BuildContext context) {
+    return buildButton(
+      context: context,
+      text: 'Sign in',
+      onPressed: _login,
+      isOutlined: false,
+      isPrimary: true,
+    );
+  }
+
+  Widget _buildDivider() {
+    return Row(
+      children: [
+        Expanded(child: Divider()),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Text('Sign in with'),
+        ),
+        Expanded(child: Divider()),
+      ],
+    );
+  }
+
+  Widget _buildSocialLoginButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        FaIcon(FontAwesomeIcons.facebookF),
+        FaIcon(FontAwesomeIcons.twitter),
+        FaIcon(FontAwesomeIcons.google),
+        FaIcon(FontAwesomeIcons.apple),
+      ],
+    );
+  }
+
+  Widget _buildSignUpOption() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Don't have an account? "),
+        TextButton(
+          onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const SignUpScreen())),
+          child: Text('Sign up',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: lightColorScheme.primary)),
+        ),
+      ],
     );
   }
 }

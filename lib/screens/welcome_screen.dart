@@ -35,9 +35,9 @@ class WelcomeScreen extends StatelessWidget {
                       // กำหนดรูปแบบข้อความ
                       children: [
                         TextSpan(
-                            text: 'Welcome Back!\n', // ข้อความ "Welcome Back!"
+                            text: 'Welcome !\n', // ข้อความ "Welcome Back!"
                             style: TextStyle(
-                              fontSize: 45.0, // ขนาดฟอนต์ใหญ่ 45
+                              fontSize: 40, // ขนาดฟอนต์ใหญ่ 40
                               fontWeight:
                                   FontWeight.w600, // น้ำหนักตัวอักษรหนาปานกลาง
                             )),

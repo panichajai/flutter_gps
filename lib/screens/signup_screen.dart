@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart'; // ใช้สำหรับสร้าง UI ใน Flutter
 import 'dart:convert'; // ใช้สำหรับแปลงข้อมูล JSON (jsonEncode และ jsonDecode)
 import 'package:http/http.dart' as http; // ใช้สำหรับการเรียก API ผ่าน HTTP
-import 'package:icons_plus/icons_plus.dart'; // ใช้แสดงไอคอนโซเชียลมีเดีย เช่น Facebook, Google
 import 'package:flutter_gps/screens/signin_screen.dart'; // นำเข้าหน้าจอสำหรับ "Sign In"
 import 'package:flutter_gps/theme/theme.dart'; // นำเข้าธีมของแอป เช่น สีหลัก
 import 'package:flutter_gps/widgets/custom_scaffold.dart'; // นำเข้า CustomScaffold ที่เป็นโครงสร้างหน้าจอ
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // หน้าจอสำหรับ "Sign Up" (สมัครสมาชิก)
 class SignUpScreen extends StatefulWidget {
@@ -264,10 +264,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // ไอคอนโซเชียลมีเดีย
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Logo(Logos.facebook_f),
-                          Logo(Logos.twitter),
-                          Logo(Logos.google),
-                          Logo(Logos.apple),
+                          FaIcon(FontAwesomeIcons.facebookF),
+                          FaIcon(FontAwesomeIcons.twitter),
+                          FaIcon(FontAwesomeIcons.google),
+                          FaIcon(FontAwesomeIcons.apple),
                         ],
                       ),
                       const SizedBox(height: 25.0),
