@@ -1,15 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- ✅ ขอสิทธิ์ใช้งาน Location -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+  
+    <!-- Permissions สำหรับใช้งาน GPS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
-    <!-- ✅ รองรับ Google Maps API -->
-    <uses-feature android:name="android.hardware.location.gps" android:required="true"/>
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  
     <application
-        android:label="flutter_gps"
+        android:label="flutter_map"
+        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        
+        <!-- ใส่ Google Maps API Key ที่นี่ -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAi5Yx9p_R4lCkP4qD3ZILrwfx3bQS76YY"/>
 
         <activity
             android:name=".MainActivity"
@@ -20,33 +24,21 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-
+            
             <meta-data
-                android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme"
-            />
-
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <!-- ✅ ใช้ Google Maps API Key -->
-        <meta-data 
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
-        <!-- ✅ รองรับ Flutter -->
+        <!-- Flutter Meta-data -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
-        </intent>
-    </queries>
 </manifest>

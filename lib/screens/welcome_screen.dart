@@ -43,7 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                             )),
                         TextSpan(
                             text:
-                                '\nEnter personal details to your employee account', // ข้อความเพิ่มเติมด้านล่าง
+                                '\nFind your destination anytime, anywhere!', // ข้อความเพิ่มเติมด้านล่าง
                             style: TextStyle(
                               fontSize: 20, // ขนาดฟอนต์ 20
                             ))

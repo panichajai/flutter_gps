@@ -8,7 +8,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:flutter_gps/screens/signup_screen.dart';
-import 'package:flutter_gps/screens/signin_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   @override
@@ -194,38 +193,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print('Failed to delete account. Status code: ${response.statusCode}');
       }
     }
-  }
-
-  /// ฟังก์ชันสร้างช่องกรอกข้อมูล
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    bool obscureText = false,
-    VoidCallback? toggleObscure,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
-      child: SizedBox(
-        height: 48, // กำหนดความสูงให้สอดคล้องกับปุ่ม
-        child: TextField(
-          controller: controller,
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            hintText: hintText,
-            suffixIcon: toggleObscure != null
-                ? IconButton(
-                    icon: Icon(obscureText
-                        ? LineAwesomeIcons.eye_slash
-                        : LineAwesomeIcons.eye),
-                    onPressed: toggleObscure,
-                  )
-                : null,
-          ),
-        ),
-      ),
-    );
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:convert'; // ใช้สำหรับแปลง JSON
 import 'package:flutter/material.dart'; // เครื่องมือ UI จาก Flutter
 import 'package:flutter_gps/constants.dart';
 import 'package:flutter_gps/screens/edit_profile.dart';
+import 'package:flutter_gps/screens/map_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http; // ใช้เรียก API ผ่าน HTTP
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -148,7 +149,7 @@ class _TabMenuScreenState extends State<TabMenuScreen> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    const Center(child: Text('Home')), // ✅ แท็บ Home
+                    MapsScreen(), // ✅ แท็บ Home
                     const Center(child: Text('Contact')), // ✅ แท็บ Contact
 
                     // ✅ แท็บ Profile (ใช้โค้ดเดิมที่ให้มา)
